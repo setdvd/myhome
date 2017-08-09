@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "build:ts": "tsc",
-    "start":"npm run build:ts && NODE_CONFIG_DIR=./../config migrate -c ./dist && node ./dist/backend/server.js",
-    "migrate:down":"NODE_CONFIG_DIR=./../config migrate -c ./dist down",
+    "watch:ts": "tsc --watch",
+    "start": "npm run build:ts && NODE_CONFIG_DIR=./../config migrate -c ./dist && node ./dist/backend/server.js",
+    "migrate:down": "NODE_CONFIG_DIR=./../config migrate -c ./dist down",
     "migrate": "migrate -c ./src"
   },
   "dependencies": {
@@ -15,11 +16,19 @@
     "@types/koa-bodyparser": "^3.0.23",
     "@types/koa-router": "^7.0.22",
     "@types/pg": "^6.1.43",
+    "apollo-react": "^0.7.1",
+    "apollo-server-koa": "^1.0.5",
     "config": "^1.26.1",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.2.1",
+    "material-ui": "^0.18.7",
+    "migrate": "^0.2.3",
     "pg": "^7.1.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router": "^4.1.2",
+    "react-tap-event-plugin": "^2.0.1",
     "tslint": "^5.5.0",
     "typescript": "^2.4.2"
   }

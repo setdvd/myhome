@@ -17,12 +17,18 @@ declare module "koa" {
     }
 }
 
+koa.use(async function logger(ctx,next){
+    console.log('request');
+    await next();
+    console.log(`status ${ctx.status}`);
+});
+
 koa.use(async function dbProvider(ctx, next) {
     ctx.db = pool;
     await next();
 });
 
-router.post("/sensorReadings", bodyParser, async function sensorReadingHandler(ctx, next) {
+router.get("/sensorReadings", bodyParser, async function sensorReadingHandler(ctx, next) {
     try {
         const {
                   sensorId,

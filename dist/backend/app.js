@@ -45,6 +45,21 @@ var koa = new Koa();
 var router = new Router();
 var pool = new pg_1.Pool(dbConfig);
 var bodyParser = BodyParser();
+koa.use(function logger(ctx, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log('request');
+                    return [4 /*yield*/, next()];
+                case 1:
+                    _a.sent();
+                    console.log("status " + ctx.status);
+                    return [2 /*return*/];
+            }
+        });
+    });
+});
 koa.use(function dbProvider(ctx, next) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -59,7 +74,7 @@ koa.use(function dbProvider(ctx, next) {
         });
     });
 });
-router.post("/sensorReadings", bodyParser, function sensorReadingHandler(ctx, next) {
+router.get("/sensorReadings", bodyParser, function sensorReadingHandler(ctx, next) {
     return __awaiter(this, void 0, void 0, function () {
         var _a, sensorId, value, e_1;
         return __generator(this, function (_b) {
