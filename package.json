@@ -1,0 +1,26 @@
+{
+  "name": "myhome",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build:ts": "tsc",
+    "start":"npm run build:ts && NODE_CONFIG_DIR=./../config migrate -c ./dist && node ./dist/backend/server.js",
+    "migrate:down":"NODE_CONFIG_DIR=./../config migrate -c ./dist down",
+    "migrate": "migrate -c ./src"
+  },
+  "dependencies": {
+    "@types/config": "0.0.32",
+    "@types/es6-promise": "0.0.32",
+    "@types/koa": "^2.0.39",
+    "@types/koa-bodyparser": "^3.0.23",
+    "@types/koa-router": "^7.0.22",
+    "@types/pg": "^6.1.43",
+    "config": "^1.26.1",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.2.1",
+    "pg": "^7.1.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
+  }
+}
