@@ -7,7 +7,11 @@ export const up = async (next) => {
 
     const client = new Client(dbConfig);
     await client.connect();
-    await client.query(`CREATE SCHEMA IF NOT EXISTS general;`);
+    try {
+        await client.query(`CREATE SCHEMA general;`);
+    } catch (e) {
+        console.log("schema exists");
+    }
     await client.query(`SET SEARCH_PATH TO general;`);
     await client.query(`
           CREATE TABLE IF NOT EXISTS t_sensor (
