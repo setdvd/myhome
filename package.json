@@ -8,7 +8,7 @@
     "start": "npm run build:ts && NODE_CONFIG_DIR=./../config migrate -c ./dist && node ./dist/backend/server.js",
     "migrate:down": "NODE_CONFIG_DIR=./../config migrate -c ./dist down",
     "migrate:create": "migrate -c ./src",
-    "migrate": "migrate -c ./dist"
+    "migrate": "NODE_CONFIG_DIR=./../config migrate -c ./dist"
   },
   "dependencies": {
     "@types/config": "0.0.32",
