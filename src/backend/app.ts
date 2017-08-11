@@ -2,8 +2,14 @@ import * as config from "config";
 import * as Koa from "koa";
 import * as BodyParser from "koa-bodyparser";
 import * as Router from "koa-router";
-import {Pool} from "pg";
+import * as pg from "pg";
+import {inject as pgCamelCase} from "pg-camelcase";
+import graphql from "./graphql";
 
+// Patch pg to user camel case;
+pgCamelCase(pg);
+
+const {Pool}     = pg;
 const dbConfig   = config.get("db");
 const koa        = new Koa();
 const router     = new Router();
@@ -13,12 +19,12 @@ const bodyParser = BodyParser();
 declare module "koa" {
     //noinspection TsLint
     export interface Context {
-        db: Pool;
+        db: pg.Pool;
     }
 }
 
-koa.use(async function logger(ctx,next){
-    console.log('request');
+koa.use(async function logger(ctx, next) {
+    console.log("request");
     await next();
     console.log(`status ${ctx.status}`);
 });
@@ -27,6 +33,8 @@ koa.use(async function dbProvider(ctx, next) {
     ctx.db = pool;
     await next();
 });
+
+koa.use(graphql);
 
 router.get("/sensorReadings", bodyParser, async function sensorReadingHandler(ctx, next) {
     try {
@@ -37,8 +45,8 @@ router.get("/sensorReadings", bodyParser, async function sensorReadingHandler(ct
         console.log(sensorId);
         console.log(value);
         await ctx.db.query(`
-            insert into general.t_sensor_reading ( sensor, value)
-            values ($1,$2)`,
+            insert into general.t_sensor_reading (sensor, value)
+            values ($1, $2)`,
             [sensorId, value]);
         ctx.status = 200;
         ctx.body   = "ok";

@@ -11,7 +11,7 @@ export default `
         id:Int!
         value:Int!
         sensor:Sensor!
-        createdAt:Int!
+        createdAt:String!
     }
 
     type Query{
