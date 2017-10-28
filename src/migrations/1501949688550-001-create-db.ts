@@ -3,7 +3,7 @@ import {Client} from "pg";
 
 const dbConfig = config.get("db");
 console.log("migrate");
-export const up = async (next) => {
+export const up = async (next: any) => {
 
     const client = new Client(dbConfig);
     await client.connect();
@@ -24,7 +24,7 @@ export const up = async (next) => {
         CREATE TABLE IF NOT EXISTS t_sensor_reading (
             id          serial primary key,
             value       smallint,
-            sensor      int references t_sensor(id),
+            sensor      int references t_sensor(id) on delete cascade,
             created_at  timestamptz default now()
         );
     `);
@@ -32,7 +32,7 @@ export const up = async (next) => {
     next();
 };
 
-export const down = async (next) => {
+export const down = async (next: any) => {
     const client = new Client(dbConfig);
     await client.connect();
     await client.query(`DROP SCHEMA IF EXISTS general CASCADE;`);

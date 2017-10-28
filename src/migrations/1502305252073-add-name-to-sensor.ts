@@ -3,7 +3,9 @@ import {Client} from "pg";
 
 const dbConfig = config.get("db");
 
-export const up = async (next) => {
+type Next = () => void;
+
+export const up = async (next: Next) => {
     const db = new Client(dbConfig);
     await db.connect();
     await db.query(`SET SEARCH_PATH TO general;`);
@@ -21,14 +23,14 @@ export const up = async (next) => {
     next();
 };
 
-export const down = async (next) => {
+export const down = async (next: Next) => {
     const db = new Client(dbConfig);
     await db.connect();
     await db.query(`SET SEARCH_PATH TO general;`);
 
     await db.query(`
-    alter table t_sensor
-      drop column name restrict;
+        alter table t_sensor
+        drop column name restrict;
   `);
 
     await db.end();

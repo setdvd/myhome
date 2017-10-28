@@ -3,7 +3,7 @@ export default `
     type Sensor {
         id:Int!
         name:String!
-        description:String!
+        description:String
         sensorReadings:[SensorReading]!
     }
 
@@ -14,12 +14,17 @@ export default `
         createdAt:String!
     }
 
+    type Mutation{
+        createSensor(name:String! description:String):Sensor!
+    }
+
     type Query{
         sensors:[Sensor]!
     }
 
     schema {
         query: Query
+        mutation:Mutation
     }
 
-`
+`;
