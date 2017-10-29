@@ -1,16 +1,20 @@
 import * as fs from "fs";
 import * as Koa from "koa";
-import * as BodyParser from "koa-bodyparser";
 import * as Router from "koa-router";
+import {devMiddleware} from "koa-webpack-middleware";
 import * as path from "path";
 import {Pool} from "pg";
+import * as webpack from "webpack";
 import pool from "../lib/db";
+import webpackConfig = require("../webpack.config.js");
 import graphql from "./graphql";
 
+const compile    = webpack(webpackConfig as any);
 const koa        = new Koa();
 const router     = new Router();
-const bodyParser = BodyParser();
 const assetPath  = "/assets/bundle.js";
+const {NODE_ENV} = process.env;
+const isProd     = NODE_ENV === "production";
 
 declare module "koa" {
     //noinspection TsLint
@@ -31,40 +35,44 @@ koa.use(async function dbProvider(ctx, next) {
 
 koa.use(graphql);
 
-router.get("/sensorReadings", bodyParser, async function sensorReadingHandler(ctx, next) {
-    try {
-        const {
-                  sensorId,
-                  value,
-              } = ctx.request.body;
-        console.log(sensorId);
-        console.log(value);
-        await ctx.db.query(`
-            insert into general.t_sensor_reading (sensor, value)
-            values ($1, $2)`,
-            [sensorId, value]);
+if (isProd) {
+    router.get(assetPath, async function sendBundle(ctx, next) {
         ctx.status = 200;
-        ctx.body   = "ok";
-    } catch (e) {
-        console.error(e.message);
-        ctx.status = 500;
-        ctx.body   = e.message;
-        switch (e.code) {
-            case "23503":
-                ctx.status = 400;
-                ctx.body   = "Incorrect sensor id";
-        }
-    }
+        ctx.body   = fs.createReadStream(path.join(__dirname, "../../dist/bundle.js"));
+        await next();
+    });
+} else {
+    // webpack in not prod env;
+    router.use(devMiddleware(compile, {
+        // display no info to console (only warnings and errors)
+        noInfo: false,
 
-    await next();
+        // display nothing to the console
+        quiet: false,
 
-});
+        // switch into lazy mode
+        // that means no watching, but recompilation on every request
+        lazy: false,
 
-router.get(assetPath, async function sendBundle(ctx, next) {
-    ctx.status = 200;
-    ctx.body   = fs.createReadStream(path.join(__dirname, "../../dist/bundle.js"));
-    await next();
-});
+        // watch options (only lazy: false)
+        watchOptions: {
+            aggregateTimeout: 300,
+            poll            : false,
+        },
+
+        // public path to bind the middleware to
+        // use the same as in webpack
+        publicPath: "/assets/",
+
+        // custom headers
+        // headers: { "X-Custom-Header": "yes" },
+
+        // options for formating the statistics
+        stats: {
+            colors: true,
+        },
+    }));
+}
 
 router.get("/*", async function mainHTMLPage(ctx, next) {
     if (!ctx.body) {

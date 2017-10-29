@@ -6,6 +6,8 @@ services:
       - frontend
     ports:
       - "3000:3000"
+    volumes:
+      - ".:/usr/src/myhome"
     environment:
      PORT: 3000
      DATABASE_URL: postgresql://postgres@db/myhome

@@ -32,7 +32,7 @@ class SensorList extends React.PureComponent<ISensorListProps> {
         const {sensors = [], onDelete} = this.props;
         return (
             <List>
-                <Header>Sensor list</Header>
+                <Header>Sensor list: .,,,xxx,xx2xs,,m...</Header>
                 {sensors.map((sensor) => <Sensor onDelete={onDelete} {...sensor}/>)}
             </List>
         );

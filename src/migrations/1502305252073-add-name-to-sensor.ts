@@ -9,7 +9,7 @@ export const up = async (next: Next) => {
     try {
         await client.query(`
             alter table t_sensor
-              add column name text;
+              add column if not exists name text;
         `);
     } catch (e) {
         console.log(e);
