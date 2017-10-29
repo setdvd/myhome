@@ -16,6 +16,8 @@ export default `
 
     type Mutation{
         createSensor(name:String! description:String):Sensor!
+        deleteSensor(id:String!):Sensor!
+        submitSensorReading(sensorId:String! value:Int):SensorReading!
     }
 
     type Query{

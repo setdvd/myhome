@@ -1,0 +1,29 @@
+version: "3"
+services:
+  web:
+    build: .
+    networks:
+      - frontend
+    ports:
+      - "3000:3000"
+    environment:
+     PORT: 3000
+     DATABASE_URL: postgresql://postgres@db/myhome
+    depends_on:
+      - db
+    command: sh -c "npm run migrate && npm run start"
+  db:
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: myhome
+    networks:
+      - frontend
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+networks:
+  frontend:
+

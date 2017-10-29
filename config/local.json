@@ -1,8 +1,0 @@
-{
-  "db": {
-    "user": "postgres",
-    "host": "localhost",
-    "database": "myhome"
-  },
-  "port":3000
-}

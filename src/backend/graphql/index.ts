@@ -28,7 +28,7 @@ router.post(qlPath, koaBody(), graphqlKoa((ctx) => {
         context,
         schema: myGraphQLSchema,
         // formatError,
-    };
+    } as any; // cast to as any due to wired ts issue error TS2345: Argument of type '(ctx: Context) => { context: IGraphqlContext; schema: GraphQLSchema; }' is not assignable to parameter of type 'GraphQLServerOptions | KoaGraphQLOptionsFunction'.
 }));
 router.get("/graphiql", graphiqlKoa({endpointURL: qlPath}));
 

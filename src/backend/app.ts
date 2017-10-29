@@ -1,28 +1,21 @@
-import * as config from "config";
 import * as fs from "fs";
 import * as Koa from "koa";
 import * as BodyParser from "koa-bodyparser";
 import * as Router from "koa-router";
 import * as path from "path";
-import * as pg from "pg";
-import {inject as pgCamelCase} from "pg-camelcase";
+import {Pool} from "pg";
+import pool from "../lib/db";
 import graphql from "./graphql";
 
-// Patch pg to user camel case;
-pgCamelCase(pg);
-
-const {Pool}     = pg;
-const dbConfig   = config.get("db");
 const koa        = new Koa();
 const router     = new Router();
-const pool       = new Pool(dbConfig);
 const bodyParser = BodyParser();
 const assetPath  = "/assets/bundle.js";
 
 declare module "koa" {
     //noinspection TsLint
     export interface Context {
-        db: pg.Pool;
+        db: Pool;
     }
 }
 

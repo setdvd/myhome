@@ -3,10 +3,11 @@ import {List} from "material-ui/List";
 import Header from "material-ui/Subheader";
 import * as React from "react";
 import {graphql} from "react-apollo";
-import CircularProgress from "../CircularProgress"
-import Sensor, {ISensorProps} from "./Sensor";
+import CircularProgress from "../CircularProgress";
+import DeleteSensorContainer from "./DeleteSensorContainer";
+import Sensor, {ISensor} from "./Sensor";
 
-export const query = gql`
+export const QUERY_SENSORS = gql`
     query sensorList {
         sensors{
             ...Sensor
@@ -15,31 +16,38 @@ export const query = gql`
     ${Sensor.query}
 `;
 
+export interface IResponce {
+    sensors: ISensor[]
+}
+
 export interface ISensorListProps {
-    sensors?: ISensorProps[];
-    loading?: boolean
+    sensors?: ISensor[];
+    loading?: boolean,
+    onDelete: (id: string) => any;
 }
 
 class SensorList extends React.PureComponent<ISensorListProps> {
 
     public render() {
-        const {sensors = []} = this.props;
+        const {sensors = [], onDelete} = this.props;
         return (
             <List>
                 <Header>Sensor list</Header>
-                {sensors.map((sensor) => <Sensor {...sensor}/>)}
+                {sensors.map((sensor) => <Sensor onDelete={onDelete} {...sensor}/>)}
             </List>
         );
     }
 }
 
-const Container = graphql<ISensorListProps, ISensorListProps>(query, {
-    props: ({data: {loading = false, sensors = []} = {}}) => {
+const Container = graphql<IResponce, { onDelete: (id: string) => any }, ISensorListProps>(QUERY_SENSORS, {
+    props: ({data, ownProps}): ISensorListProps => {
+        const {onDelete} = ownProps;
         return {
-            loading,
-            sensors,
+            loading: data && data.loading,
+            onDelete,
+            sensors: data && data.sensors,
         };
     },
 });
 
-export default Container(CircularProgress<ISensorListProps>(SensorList));
+export default DeleteSensorContainer(Container(CircularProgress<ISensorListProps>(SensorList)));

@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import {graphql} from "react-apollo";
-import {ISensorListProps, query} from "../SensorList";
+import {ISensorListProps, QUERY_SENSORS} from "../SensorList";
 import {ISensorCreateFormProps} from "./CreateSensorComponent";
 
 interface ISensor {
@@ -38,10 +38,10 @@ export default graphql<ISensor, ISensorCreateFormProps>(mutation, {
                     },
                     update            : (store, {data: {createSensor: data}}: any) => {
                         // read list
-                        const dataFromQuery   = store.readQuery({query}) as ISensorListProps;
+                        const dataFromQuery   = store.readQuery({query: QUERY_SENSORS}) as ISensorListProps;
                         dataFromQuery.sensors = dataFromQuery.sensors || [];
                         dataFromQuery.sensors.push(data as any);
-                        store.writeQuery({query, data: dataFromQuery});
+                        store.writeQuery({query: QUERY_SENSORS, data: dataFromQuery});
                     },
                     variables         : {
                         description,

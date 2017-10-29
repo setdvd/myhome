@@ -1,12 +1,8 @@
-import * as config from "config";
-import {Client} from "pg";
+import db from "../lib/db";
 
-const dbConfig = config.get("db");
 console.log("migrate");
 export const up = async (next: any) => {
-
-    const client = new Client(dbConfig);
-    await client.connect();
+    const client = await db.connect();
     try {
         await client.query(`CREATE SCHEMA general;`);
     } catch (e) {
@@ -33,8 +29,7 @@ export const up = async (next: any) => {
 };
 
 export const down = async (next: any) => {
-    const client = new Client(dbConfig);
-    await client.connect();
+    const client = await db.connect();
     await client.query(`DROP SCHEMA IF EXISTS general CASCADE;`);
     await client.end();
     next();
