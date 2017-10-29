@@ -1,7 +1,7 @@
 import db from "../lib/db";
 
 console.log("migrate");
-export const up = async (next: any) => {
+const up = async (next: any) => {
     const client = await db.connect();
     try {
         await client.query(`CREATE SCHEMA general;`);
@@ -28,9 +28,11 @@ export const up = async (next: any) => {
     next();
 };
 
-export const down = async (next: any) => {
+const down = async (next: any) => {
     const client = await db.connect();
     await client.query(`DROP SCHEMA IF EXISTS general CASCADE;`);
     await client.end();
     next();
 };
+
+export {up, down};
