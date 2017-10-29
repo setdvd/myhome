@@ -29,7 +29,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
             <ListItem
                 key={id}
                 primaryText={name}
-                secondaryText={description}
+                secondaryText={`${id}: ${description}`}
                 secondaryTextLines={1}
                 rightIconButton={(
                     <IconButton onClick={() => onDelete(id)}>
