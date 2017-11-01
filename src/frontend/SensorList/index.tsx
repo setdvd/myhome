@@ -10,6 +10,7 @@ import Sensor, {ISensor} from "./Sensor";
 export const QUERY_SENSORS = gql`
     query sensorList {
         sensors{
+            id
             ...Sensor
         }
     }
@@ -28,15 +29,31 @@ export interface ISensorListProps {
 
 class SensorList extends React.PureComponent<ISensorListProps> {
 
+    public state: {
+        openedSensorId: string | null;
+    };
+
+    constructor() {
+        super();
+        this.state = {openedSensorId: null};
+    }
+
     public render() {
         const {sensors = [], onDelete} = this.props;
         return (
             <List>
-                <Header>Sensor list: .,,,xxx,xx2xs,,m...</Header>
-                {sensors.map((sensor) => <Sensor onDelete={onDelete} {...sensor}/>)}
+                <Header>Sensor list:</Header>
+                {sensors.map((sensor) => <Sensor onClick={this.onSensorClick.bind(this, sensor.id)}
+                                                 open={this.state.openedSensorId === sensor.id}
+                                                 onDelete={onDelete}
+                                                 {...sensor}/>)}
             </List>
         );
     }
+
+    private onSensorClick(openedSensorId: string) {
+        this.setState({openedSensorId});
+    };
 }
 
 const Container = graphql<IResponce, { onDelete: (id: string) => any }, ISensorListProps>(QUERY_SENSORS, {
