@@ -5,8 +5,34 @@ import {ListItem} from "material-ui/List";
 import Paper from "material-ui/Paper";
 import IconDelete from "material-ui/svg-icons/action/delete";
 import * as moment from "moment";
+import * as R from "ramda";
 import * as React from "react";
 import {Line} from "react-chartjs-2";
+
+interface ICreatedAt {
+    createdAt: string;
+}
+
+const groupCreatedAtByDayFormat = (format: string) => R.groupBy((obj: ICreatedAt) => {
+    const {createdAt} = obj;
+    console.warn(createdAt);
+    return moment(createdAt).format(format);
+});
+
+// const groupCreatedAtByDayFormat = (format: string, list: ICreatedAt[]) => R.groupBy((obj) => {
+//     const {createdAt} = obj;
+//     // day of the year
+//     return moment(createdAt).format(format);
+// }, list);
+
+const averageValueByGroup    = R.map(R.compose(R.mean, R.pluck("value")));
+const groupByDay = groupCreatedAtByDayFormat("MMM DD YYYY");
+const groupByHour = groupCreatedAtByDayFormat("MMM DD YYYY hh");
+const groupByMin = groupCreatedAtByDayFormat("MMM DD YYYY hh:mm");
+
+const averageValueByDay = R.compose(averageValueByGroup, groupByDay as any);
+const averageValueByHour     = R.compose(averageValueByGroup, groupByHour as any);
+const averageValueByMin     = R.compose(averageValueByGroup, groupByMin as any);
 
 export interface ISensor {
     id: string;
@@ -50,7 +76,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
                     key={id}
                     primaryText={name}
                     secondaryText={`${id}: ${description}`}
-                    secondaryTextLines={3}
+                    secondaryTextLines={2}
                     rightIconButton={(
                         <IconButton onClick={() => onDelete(id)}>
                             <IconDelete/>
@@ -64,6 +90,10 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
     }
 
     private sensorReadingsToGraphPoints(data: ISensorReadings[]) {
+        const poins   = averageValueByDay(data);
+        const labels  = R.keys(poins);
+        const dataset = R.compose(R.map(([x, y]) => ({x, y})), R.zip(labels), R.values);
+
         return {
             datasets: [{
                 backgroundColor          : "rgba(75,192,192,0.4)",
@@ -72,10 +102,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
                 borderDash               : [],
                 borderDashOffset         : 0.0,
                 borderJoinStyle          : "miter",
-                data                     : data.map((sensorReading) => ({
-                    x: new Date(sensorReading.createdAt),
-                    y: sensorReading.value,
-                })),
+                data                     : dataset(poins),
                 fill                     : false,
                 label                    : "My First dataset",
                 pointBackgroundColor     : "#fff",
@@ -88,17 +115,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
                 pointHoverRadius         : 5,
                 pointRadius              : 1,
             }],
-            labels  : data.map((r) => moment(r.createdAt).format("Do MMM")),
-            options : {
-                scales: {
-                    xAxes: [{
-                        time: {
-                            unit        : "day",
-                            unitStepSize: 1,
-                        },
-                    }],
-                },
-            },
+            labels,
         };
     }
 }
