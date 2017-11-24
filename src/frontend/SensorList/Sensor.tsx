@@ -13,26 +13,14 @@ interface ICreatedAt {
     createdAt: string;
 }
 
-const groupCreatedAtByDayFormat = (format: string) => R.groupBy((obj: ICreatedAt) => {
-    const {createdAt} = obj;
-    console.warn(createdAt);
-    return moment(createdAt).format(format);
-});
+const groupCreatedAtByDayFormat = R.curry((format: string, list: ICreatedAt[]) => R.groupBy(({createdAt}) => moment(createdAt).format(format), list));
 
-// const groupCreatedAtByDayFormat = (format: string, list: ICreatedAt[]) => R.groupBy((obj) => {
-//     const {createdAt} = obj;
-//     // day of the year
-//     return moment(createdAt).format(format);
-// }, list);
+const averageValueByGroup   = R.map(R.compose(R.mean, R.pluck("value")));
+const averageValueByFormant = (format: string) => R.compose(averageValueByGroup, groupCreatedAtByDayFormat(format) as any);
 
-const averageValueByGroup    = R.map(R.compose(R.mean, R.pluck("value")));
-const groupByDay = groupCreatedAtByDayFormat("MMM DD YYYY");
-const groupByHour = groupCreatedAtByDayFormat("MMM DD YYYY hh");
-const groupByMin = groupCreatedAtByDayFormat("MMM DD YYYY hh:mm");
-
-const averageValueByDay = R.compose(averageValueByGroup, groupByDay as any);
-const averageValueByHour     = R.compose(averageValueByGroup, groupByHour as any);
-const averageValueByMin     = R.compose(averageValueByGroup, groupByMin as any);
+const averageValueByDay  = averageValueByFormant("MMM DD YYYY");
+const averageValueByHour = averageValueByFormant("MMM DD YYYY hh");
+const averageValueByMin  = averageValueByFormant("MMM DD YYYY hh:mm");
 
 export interface ISensor {
     id: string;
@@ -90,7 +78,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
     }
 
     private sensorReadingsToGraphPoints(data: ISensorReadings[]) {
-        const poins   = averageValueByDay(data);
+        const poins   = averageValueByMin(data);
         const labels  = R.keys(poins);
         const dataset = R.compose(R.map(([x, y]) => ({x, y})), R.zip(labels), R.values);
 
