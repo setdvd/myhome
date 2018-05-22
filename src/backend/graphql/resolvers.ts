@@ -55,6 +55,14 @@ export default {
             return sensor.id;
         },
         name          : (sensor: ISensor) => sensor.name || sensor.id,
+        sensorCount   : async (sensor: ISensor, __: any, {db}: IGraphqlContext) => {
+            const {rows: [{count}]} = await db.query(`
+               select count(id)
+               from general.t_sensor_reading
+               where general.t_sensor_reading.sensor = $1`, [sensor.id]);
+            console.log("count", count);
+            return count;
+        },
         sensorReadings: async (sensor: ISensor, __: any, {db}: IGraphqlContext) => {
             const {rows: readings} = await db.query(`
                 select *

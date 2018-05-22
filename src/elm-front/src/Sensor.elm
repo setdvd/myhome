@@ -13,7 +13,7 @@ import Json.Encode exposing (encode)
 
 endpointUrl : String
 endpointUrl =
-    "http://localhost:3000/graphql"
+    "http://104.46.53.53/graphql"
 
 
 type alias SensorReading =

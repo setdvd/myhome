@@ -3,6 +3,7 @@ type Sensor {
     name:String!
     description:String
     sensorReadings:[SensorReading]!
+    sensorCount:Int
 }
 
 type SensorReading {
