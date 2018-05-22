@@ -11,8 +11,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build:ts
-RUN npm run webpack
+RUN npm run build
 
 EXPOSE 3000
 
