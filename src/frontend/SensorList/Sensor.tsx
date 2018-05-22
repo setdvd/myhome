@@ -15,7 +15,7 @@ interface ICreatedAt {
 
 const groupCreatedAtByDayFormat = R.curry((format: string, list: ICreatedAt[]) => R.groupBy(({createdAt}) => moment(createdAt).format(format), list));
 
-const averageValueByGroup   = R.map(R.compose(R.mean, R.pluck("value")));
+const averageValueByGroup   = R.map(R.compose(R.mean as any, R.pluck("value") as any));
 const averageValueByFormant = (format: string) => R.compose(averageValueByGroup, groupCreatedAtByDayFormat(format) as any);
 
 const averageValueByDay  = averageValueByFormant("MMM DD YYYY");
@@ -72,7 +72,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
                     )}
                 />
                 <Divider/>
-                <Line data={this.sensorReadingsToGraphPoints(sensorReadings)}/>
+                <Line data={this.sensorReadingsToGraphPoints(sensorReadings) as any}/>
             </Paper>
         );
     }
@@ -80,7 +80,7 @@ export default class Sensor extends React.PureComponent<ISensorProps> {
     private sensorReadingsToGraphPoints(data: ISensorReadings[]) {
         const poins   = averageValueByMin(data);
         const labels  = R.keys(poins);
-        const dataset = R.compose(R.map(([x, y]) => ({x, y})), R.zip(labels), R.values);
+        const dataset = R.compose(R.map(([x, y]) => ({x, y}))as any, R.zip(labels) as any, R.values);
 
         return {
             datasets: [{

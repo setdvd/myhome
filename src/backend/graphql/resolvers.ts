@@ -8,12 +8,12 @@ interface ISensor {
 export default {
 
     Mutation: {
-        createSensor: async (_: any, {name, description}: { name: string, description: string }, {db}: IGraphqlContext) => {
+        createSensor: async (_: any, props: any, {db}: any, info: any) => {
             const {rows: [sensor]} = await db.query(`
                 insert into general.t_sensor (name, description)
                 values ($1, $2)
                 returning *;
-            `, [name, description]);
+            `, [props.name, props.description]);
             return sensor;
         },
 

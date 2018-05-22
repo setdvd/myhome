@@ -7,8 +7,8 @@ export interface IFormProps<T> {
 
 export default function Loader<T>(Component: React.ComponentClass<T>): React.ComponentClass<T> {
     return class extends React.Component <T> {
-        constructor() {
-            super();
+        constructor(props: any, context: any) {
+            super(props, context);
             this.state = {
                 error  : "",
                 loading: false,

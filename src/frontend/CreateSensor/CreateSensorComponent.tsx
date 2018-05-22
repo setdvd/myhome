@@ -15,8 +15,8 @@ interface ISensorCreateFormState {
 
 export default Loader(class SensorCreateForm extends React.Component<ISensorCreateFormProps, ISensorCreateFormState> {
 
-    constructor() {
-        super();
+    constructor(props: any, context: any) {
+        super(props, context);
         this.state = {name: ""};
     }
 

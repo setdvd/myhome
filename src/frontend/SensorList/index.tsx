@@ -33,8 +33,8 @@ class SensorList extends React.PureComponent<ISensorListProps> {
         openedSensorId: string | null;
     };
 
-    constructor() {
-        super();
+    constructor(props: any) {
+        super(props);
         this.state = {openedSensorId: null};
     }
 

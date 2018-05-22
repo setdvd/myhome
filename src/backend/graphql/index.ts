@@ -13,7 +13,7 @@ export interface IGraphqlContext {
 
 const router          = new Router();
 const myGraphQLSchema = makeExecutableSchema({
-    resolvers,
+    resolvers: resolvers as any,
     typeDefs: schema,
 });
 const qlPath = "/graphql";
