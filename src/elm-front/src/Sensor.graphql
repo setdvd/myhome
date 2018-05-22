@@ -1,0 +1,12 @@
+query sensorList {
+    sensors{
+        id
+        name
+        description
+        sensorReadings{
+            id
+            value
+            createdAt
+        }
+    }
+}

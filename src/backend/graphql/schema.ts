@@ -1,32 +1,6 @@
-export default `
+import * as fs from "fs";
+import * as path from "path";
 
-    type Sensor {
-        id:Int!
-        name:String!
-        description:String
-        sensorReadings:[SensorReading]!
-    }
+const schema = fs.readFileSync(path.join(__dirname, "./schema.graphql"), "utf8");
 
-    type SensorReading {
-        id:Int!
-        value:Int!
-        sensor:Sensor!
-        createdAt:String!
-    }
-
-    type Mutation{
-        createSensor(name:String! description:String):Sensor!
-        deleteSensor(id:String!):Sensor!
-        submitSensorReading(sensorId:String! value:Int):SensorReading!
-    }
-
-    type Query{
-        sensors:[Sensor]!
-    }
-
-    schema {
-        query: Query
-        mutation:Mutation
-    }
-
-`;
+export default schema;

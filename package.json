@@ -4,11 +4,17 @@
   "private": true,
   "scripts": {
     "build:ts": "tsc",
+    "build:code": "cd ./src/elm-front; elm-graphql --schema ../../dist/schema.json --endpoint dummy",
+    "build:schema": "apollo-codegen introspect-schema ./src/backend/graphql/schema.graphql --output ./dist/schema.json",
+    "build:copy": "copyfiles -u 1 src/**/*.graphql dist/",
     "start": "node ./dist/backend/server.js",
+    "start:front": "cd ./src/elm-front; elm-app start;",
     "migrate": "migrate -c ./dist",
     "webpack": "webpack --config ./src/webpack.config.js"
   },
   "dependencies": {
+    "@influential/elm-graphql": "git+https://github.com/Bellk17/elm-graphql.git",
+    "@types/cors": "^2.8.4",
     "@types/graphql": "^0.11.5",
     "@types/koa": "^2.0.39",
     "@types/koa-bodyparser": "^3.0.23",
@@ -23,10 +29,13 @@
     "@types/react-router": "^4.0.14",
     "@types/webpack": "^3.0.14",
     "apollo-client": "^1.9.1",
+    "apollo-codegen": "^0.19.1",
     "apollo-react": "^0.7.1",
     "apollo-server-koa": "^1.0.5",
     "awesome-typescript-loader": "^3.1.3",
     "chart.js": "^2.7.1",
+    "cors": "^2.8.4",
+    "elm-graphql": "https://github.com/Bellk17/elm-graphql",
     "graphql": "^0.10.5",
     "graphql-server-koa": "^1.2.0",
     "graphql-tag": "^2.4.2",
@@ -34,6 +43,7 @@
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.2.1",
+    "koa2-cors": "^2.0.5",
     "material-ui": "^0.18.7",
     "migrate": "^0.2.3",
     "moment": "^2.19.1",
@@ -53,6 +63,8 @@
     "webpack": "^3.5.3"
   },
   "devDependencies": {
+    "@types/koa2-cors": "^2.0.1",
+    "copyfiles": "^2.0.0",
     "koa-webpack-middleware": "^1.0.7"
   }
 }
