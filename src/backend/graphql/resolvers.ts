@@ -63,12 +63,14 @@ export default {
             console.log("count", count);
             return count;
         },
-        sensorReadings: async (sensor: ISensor, __: any, {db}: IGraphqlContext) => {
+        sensorReadings: async (sensor: ISensor, {limit}: any, {db}: IGraphqlContext) => {
             const {rows: readings} = await db.query(`
                 select *
                 from general.t_sensor_reading
                 where sensor = $1
-            `, [sensor.id]);
+                order by created_at DESC
+                limit $2
+            `, [sensor.id, limit || 500]);
             readings.forEach((reading) => reading.sensor = sensor);
             return readings;
         },

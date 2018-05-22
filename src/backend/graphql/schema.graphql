@@ -2,7 +2,7 @@ type Sensor {
     id:Int!
     name:String!
     description:String
-    sensorReadings:[SensorReading]!
+    sensorReadings(limit:Int):[SensorReading]!
     sensorCount:Int
 }
 
