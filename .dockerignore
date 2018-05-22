@@ -112,5 +112,5 @@ typings/
 
 # APP SPECIFIC
 
-dist
+dist/
 ecosystem.json
