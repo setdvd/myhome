@@ -8,6 +8,7 @@ services:
       - "3000:3000"
     volumes:
       - ".:/usr/src/myhome"
+      - npmcache:/root/.npm
     environment:
      PORT: 3000
      DATABASE_URL: postgresql://postgres@db/myhome
@@ -26,6 +27,7 @@ services:
 
 volumes:
   pgdata:
+  npmcache:
 networks:
   frontend:
 
