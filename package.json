@@ -7,7 +7,7 @@
     "build:code": "cd ./src/elm-front; elm-graphql --schema ../../dist/schema.json --endpoint dummy",
     "build:schema": "apollo-codegen introspect-schema ./src/backend/graphql/schema.graphql --output ./dist/schema.json",
     "build:copy": "copyfiles -u 1 src/**/*.graphql dist/",
-    "build": "npm run build:ts && npm run build:copy && npm run webpack",
+    "build": "npm run build:copy && npm run build:ts && npm run webpack",
     "start": "node ./dist/backend/server.js",
     "start:front": "cd ./src/elm-front; elm-app start;",
     "start:prod": "npm run migrate && npm start",
