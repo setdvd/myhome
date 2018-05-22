@@ -1,8 +1,7 @@
 node_modules
 .vscode
-dist/migrations/.migrate
 .idea/
-.dist/
+dist/
 ecosystem.json
 
 # Distribution
